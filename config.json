@@ -12,8 +12,11 @@
     ],
     "accessories": [
     	{
-        	"accessory": "mqttswitch",
+            "accessory": "mqttswitch",
             "name": "PUT THE NAME OF YOUR SWITCH HERE",
+ 	    	"model":"MODEL",
+ 	    	"manufacturer":"MANUFACTURER",
+ 	    	"serial":"SERIAL NUMBER",
             "url": "PUT URL OF THE BROKER HERE",
 			"username": "PUT USERNAME OF THE BROKER HERE",
             		"password": "PUT PASSWORD OF THE BROKER HERE",
