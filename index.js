@@ -97,5 +97,12 @@ MqttSwitchAccessory.prototype.setStatus = function(status, callback, context) {
 }
 
 MqttSwitchAccessory.prototype.getServices = function() {
+  var informationService = new Service.AccessoryInformation();
+
+  informationService
+  .setCharacteristic(Characteristic.Name, this.name)
+  .setCharacteristic(Characteristic.Manufacturer, this.manufacturer)
+  .setCharacteristic(Characteristic.Model, this.model)
+  .setCharacteristic(Characteristic.SerialNumber, this.serial);
   return [this.service];
 }
