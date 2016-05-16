@@ -27,6 +27,9 @@ var mqtt = require("mqtt");
 
 function MqttSwitchAccessory(log, config) {
   	this.log          	= log;
+	this.model			= config["model"];
+	this.serial			= config["serial"];
+	this.manufacturer	= config["manufacturer"];
   	this.name 			= config["name"];
   	this.url 			= config["url"];
 	this.client_Id 		= 'mqttjs_' + Math.random().toString(16).substr(2, 8);
@@ -84,25 +87,32 @@ module.exports = function(homebridge) {
   	homebridge.registerAccessory("homebridge-mqttswitch", "mqttswitch", MqttSwitchAccessory);
 }
 
-MqttSwitchAccessory.prototype.getStatus = function(callback) {
-    callback(null, this.switchStatus);
-}
+MqttSwitchAccessory.prototype = {
+    identify: function (callback) {
+        this.log("Identify requested!");
+        callback(); // success
+    },
 
-MqttSwitchAccessory.prototype.setStatus = function(status, callback, context) {
-	if(context !== 'fromSetValue') {
-		this.switchStatus = status;
-	    this.client.publish(this.topicStatusSet, status ? "true" : "false");
-	} 
-	callback();
-}
+	getStatus: function(callback) {
+    	callback(null, this.switchStatus);
+	},
 
-MqttSwitchAccessory.prototype.getServices = function() {
-  var informationService = new Service.AccessoryInformation();
+	setStatus: function(status, callback, context) {
+		if(context !== 'fromSetValue') {
+			this.switchStatus = status;
+		    this.client.publish(this.topicStatusSet, status ? "true" : "false");
+		} 
+		callback();
+	},
 
-  informationService
-  .setCharacteristic(Characteristic.Name, this.name)
-  .setCharacteristic(Characteristic.Manufacturer, this.manufacturer)
-  .setCharacteristic(Characteristic.Model, this.model)
-  .setCharacteristic(Characteristic.SerialNumber, this.serial);
-  return [this.service];
-}
+	getServices: function() {
+		var informationService = new Service.AccessoryInformation();
+
+		informationService
+		.setCharacteristic(Characteristic.Name, this.name)
+		.setCharacteristic(Characteristic.Manufacturer, this.manufacturer)
+		.setCharacteristic(Characteristic.Model, this.model)
+		.setCharacteristic(Characteristic.SerialNumber, this.serial);
+		return [informationService, this.service];
+	}
+};
